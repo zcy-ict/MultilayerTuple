@@ -44,6 +44,7 @@ struct MRuleNode {
 	int Free(bool free_self) {
 		if (free_self)
 			free(this);
+		return 0;
 	}
 };
 
@@ -59,10 +60,10 @@ struct MHashNode {
     bool has_next_multilayertuple;
     class MultilayerTuple *next_multilayertuple;
 
-    MHashNode(uint32_t prefix_dims_num, uint32_t *_keys, uint32_t _hash);
-    bool SameKey(uint32_t prefix_dims_num, uint32_t *_keys);
-    int InsertRule(Rule *rule, uint32_t tuple_layer, uint32_t prefix_dims_num);
-    int DeleteRule(Rule *rule, uint32_t tuple_layer, uint32_t prefix_dims_num);
+    MHashNode(uint32_t *_keys, uint32_t _hash);
+    bool SameKey(uint32_t *_keys);
+    int InsertRule(Rule *rule, uint32_t tuple_layer);
+    int DeleteRule(Rule *rule, uint32_t tuple_layer);
     uint64_t MemorySize();
     int CalculateState(ProgramState *program_state);
     int GetRules(vector<Rule*> &rules);

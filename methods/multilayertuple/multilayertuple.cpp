@@ -2,12 +2,17 @@
 
 using namespace std;
 
+// To implement MultilayerTuple in other scene, please revise these parameters.
 int max_prefix_len[5] = {32, 32, 16, 16, 8};
+int prefix_dims_num;  // to be 2 or 5
+int max_layers_num = 5;  // the max_prelix_len 32 = 2^5
+uint32_t create_next_layer_rules_num = 20;
+uint32_t delete_next_layer_rules_num = create_next_layer_rules_num / 2;
 
-int MultilayerTuple::Init(uint32_t _tuple_layer, bool _start_tuple_layer, uint32_t _prefix_dims_num) {
+
+int MultilayerTuple::Init(uint32_t _tuple_layer, bool _start_tuple_layer) {
     tuple_layer = _tuple_layer;
     start_tuple_layer = _start_tuple_layer;
-	prefix_dims_num = _prefix_dims_num;
 	return 0;
 }
 
@@ -65,20 +70,25 @@ void MultilayerTuple::SortTuples() {
     sort(tuples_arr, tuples_arr + tuples_num, CmpMTuple);
 }
 
+uint32_t MultilayerTuple::GetReducedPrefix(uint32_t *prefix_len, Rule *rule) {
+    uint32_t prefix_pair = 0;
+    for (int i = 0; i < prefix_dims_num; ++i) {
+        int step = max(1, max_prefix_len[i] >> tuple_layer);
+        prefix_len[i] = rule->prefix_len[i] - rule->prefix_len[i] % step;
+        prefix_pair = prefix_pair << 6 | prefix_len[i];
+    }
+    return prefix_pair;
+}
+
 int MultilayerTuple::InsertRule(Rule *rule) {
 	uint32_t prefix_len[5];
-	uint32_t prefix_pair = 0;
-	for (int i = 0; i < prefix_dims_num; ++i) {
-		int step = max(1, max_prefix_len[i] >> tuple_layer);
-		prefix_len[i] = rule->prefix_len[i] - rule->prefix_len[i] % step;
-		prefix_pair = prefix_pair << 6 | prefix_len[i];
-	}
+	uint32_t prefix_pair = GetReducedPrefix(prefix_len, rule);
 	map<uint32_t, MTuple*>::iterator iter = tuples_map.find(prefix_pair);
     MTuple *tuple = NULL;
     if (iter != tuples_map.end()) {
         tuple = iter->second;
     } else {
-        tuple = new MTuple(tuple_layer, prefix_dims_num, prefix_len);
+        tuple = new MTuple(tuple_layer, prefix_len);
         InsertTuple(tuple);
         tuples_map[prefix_pair] = tuple;
     }
@@ -94,12 +104,7 @@ int MultilayerTuple::InsertRule(Rule *rule) {
 
 int MultilayerTuple::DeleteRule(Rule *rule) {
     uint32_t prefix_len[5];
-    uint32_t prefix_pair = 0;
-    for (int i = 0; i < prefix_dims_num; ++i) {
-        int step = max(1, max_prefix_len[i] >> tuple_layer);
-        prefix_len[i] = rule->prefix_len[i] - rule->prefix_len[i] % step;
-        prefix_pair = prefix_pair << 6 | prefix_len[i];
-    }
+    uint32_t prefix_pair = GetReducedPrefix(prefix_len, rule);
     map<uint32_t, MTuple*>::iterator iter = tuples_map.find(prefix_pair);
     MTuple *tuple = NULL;
     if (iter != tuples_map.end()) {
@@ -119,10 +124,11 @@ int MultilayerTuple::DeleteRule(Rule *rule) {
         tuples_arr[--tuples_num] = NULL;
         tuples_map.erase(prefix_pair);
         tuple->Free(true);
-        return 0;
     } else if (rule->priority >= tuple->max_priority) {
         SortTuples();
     }
+
+    --rules_num;
     if (rules_num == 0)
         max_priority = 0;
     else
@@ -145,7 +151,7 @@ int MultilayerTuple::Lookup(Trace *trace, int priority) {
         while (hash_node) {
             if (priority >= hash_node->max_priority)
                 break;
-            if (hash_node->SameKey(prefix_dims_num, keys)) {
+            if (hash_node->SameKey(keys)) {
                 if (hash_node->has_next_multilayertuple) {
                     priority = hash_node->next_multilayertuple->Lookup(trace, priority);
                 } else {
@@ -196,7 +202,7 @@ int MultilayerTuple::LookupAccess(Trace *trace, int priority, Rule *ans_rule, Pr
             if (priority >= hash_node->max_priority)
                 break;
             program_state->access_nodes.AddNum();
-            if (hash_node->SameKey(prefix_dims_num, keys)) {
+            if (hash_node->SameKey(keys)) {
                 if (hash_node->has_next_multilayertuple) {
                     priority = hash_node->next_multilayertuple->LookupAccess(trace, priority, ans_rule, program_state);
                 } else {

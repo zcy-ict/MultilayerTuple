@@ -29,7 +29,7 @@ struct CommandStruct {
     int force_test;
 	int print_mode;
 
-	int prefix_dim_num;
+	int prefix_dims_num;
 
 	int lookup_thread_time;
 	int update_thread_speed;

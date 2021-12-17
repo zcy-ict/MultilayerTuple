@@ -43,12 +43,12 @@ RunMethod() {
             data=${data_size}_${data_type}
             echo "${data}" >> ${output}
 
-            for prefix_dim_num in 5 # 2
+            for prefix_dims_num in 5 # 2
             do
-                RunProgram    DimTSS             DimTSS             ${data} --prefix_dim_num ${prefix_dim_num}
-                RunProgram    TupleMerge         TupleMerge         ${data} --prefix_dim_num ${prefix_dim_num}
-                RunProgram    PartitionSort      PartitionSort      ${data} --prefix_dim_num ${prefix_dim_num}
-                RunProgram    MultilayerTuple    MultilayerTuple    ${data} --prefix_dim_num ${prefix_dim_num}
+                RunProgram    DimTSS             DimTSS             ${data} --prefix_dims_num ${prefix_dims_num}
+                RunProgram    TupleMerge         TupleMerge         ${data} --prefix_dims_num ${prefix_dims_num}
+                RunProgram    PartitionSort      PartitionSort      ${data} --prefix_dims_num ${prefix_dims_num}
+                RunProgram    MultilayerTuple    MultilayerTuple    ${data} --prefix_dims_num ${prefix_dims_num}
 
             done
         done

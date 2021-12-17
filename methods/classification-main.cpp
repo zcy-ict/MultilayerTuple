@@ -57,7 +57,7 @@ int ClassificationMain(CommandStruct command) {
 
     vector<Trace*> traces = ReadTraces(command.traces_file);
 
-    if (command.prefix_dim_num == 5)
+    if (command.prefix_dims_num == 5)
         rules = RulesPortPrefix(rules, true);
     
     vector<int> ans = GenerateAns(rules, traces, command.force_test);
@@ -79,4 +79,5 @@ int ClassificationMain(CommandStruct command) {
     
     FreeRules(rules);
     FreeTraces(traces);
+    return 0;
 }

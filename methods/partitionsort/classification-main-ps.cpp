@@ -123,30 +123,5 @@ int ClassificationMainPS(CommandStruct command, ProgramState *program_state, vec
         // PerformOnlyPacketClassification(ptss, ps_rules, packets);
         PerformClassificationPS(command, program_state, tuplemerge, ps_rules, packets, ans, &PacketClassifier::ClassifyAPacket, &PacketClassifier::ClassifyAPacketAccess);
     }
-     // else if (command.method_name == "MultilayerTuple") {
-    //     MultilayerTuple multilayertuple;
-    //     multilayertuple.Init(1, 2);
-    //     PerformClassificationZcy(command, program_state, multilayertuple, rules, traces, ans, &Classifier::Lookup, &Classifier::LookupAccess);
-    // } else if (command.method_name == "RangeCuts") {
-    //     RangeCuts rangecuts;
-    //     if (command.rangecuts_split_rules_num > 0)
-    //         rangecuts_split_rules_num = command.rangecuts_split_rules_num;
-    //     PerformClassificationZcy(command, program_state, rangecuts, rules, traces, ans, &Classifier::Lookup, &Classifier::LookupAccess);
-    // } else if (command.method_name == "PextCuts") {
-    //     PextCuts pextcuts;
-    //     PerformClassificationZcy(command, program_state, pextcuts, rules, traces, ans, &Classifier::Lookup, &Classifier::LookupAccess);
-    // } else if (command.method_name == "MultiPextCuts") {
-    //     MultiPextCuts multipextcuts;
-    //     PerformClassificationZcy(command, program_state, multipextcuts, rules, traces, ans, &Classifier::Lookup, &Classifier::LookupAccess);
-    // } else if (command.method_name == "HyperCuts") {
-    //     EffiCuts efficuts;
-    //     efficuts.efficuts = false;
-    //     PerformClassificationZcy(command, program_state, efficuts, rules, traces, ans, &Classifier::Lookup, &Classifier::LookupAccess);
-    // } else if (command.method_name == "EffiCuts") {
-    //     EffiCuts efficuts;
-    //     efficuts.efficuts = true;
-    //     PerformClassificationZcy(command, program_state, efficuts, rules, traces, ans, &Classifier::Lookup, &Classifier::LookupAccess);
-    // } else {
-    //     printf("No such method %s\n", command.method_name.c_str());
-    // }
+    return 0;
 }

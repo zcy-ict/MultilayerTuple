@@ -3,15 +3,15 @@
 using namespace std;
 
 extern int max_prefix_len[5];
+extern int prefix_dims_num;
 
-MTuple::MTuple(uint32_t _tuple_layer, uint32_t _prefix_dims_num, uint32_t *_prefix_len) {
-	prefix_dims_num = _prefix_dims_num;
+MTuple::MTuple(uint32_t _tuple_layer, uint32_t *_prefix_len) {
 	tuple_layer = _tuple_layer;
 	for (int i = 0; i < prefix_dims_num; ++i) {
 		prefix_len[i] = _prefix_len[i];
 		prefix_len_zero[i] = max_prefix_len[i] - prefix_len[i];
 	}
-	hash_table.Init(32, tuple_layer, prefix_dims_num);
+	hash_table.Init(32, tuple_layer);
 	max_priority = 0;
 	rules_num = 0;
 

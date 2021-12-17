@@ -3,7 +3,10 @@
 using namespace std;
 
 
-extern uint32_t next_layer_rules_num;
+extern int prefix_dims_num;
+extern int max_layers_num;
+extern uint32_t create_next_layer_rules_num;
+extern uint32_t delete_next_layer_rules_num;
 
 void PerformClassificationZcy(CommandStruct &command, ProgramState *program_state, 
                        Classifier &classifier, vector<Rule*> &rules, vector<Trace*> &traces, vector<int> &ans, 
@@ -101,15 +104,20 @@ int ClassificationMainZcy(CommandStruct command, ProgramState *program_state, ve
     
     if (command.method_name == "DimTSS") {
         MultilayerTuple multilayertuple;
-        multilayertuple.Init(5, true, command.prefix_dim_num);
+        prefix_dims_num = command.prefix_dims_num;
+        multilayertuple.Init(max_layers_num, true);
         PerformClassificationZcy(command, program_state, multilayertuple, rules, traces, ans, &Classifier::Lookup, &Classifier::LookupAccess);
     } else if (command.method_name == "MultilayerTuple") {
         MultilayerTuple multilayertuple;
-        multilayertuple.Init(1, true, command.prefix_dim_num);
-        if (command.next_layer_rules_num > 0)
-            next_layer_rules_num = command.next_layer_rules_num;
+        prefix_dims_num = command.prefix_dims_num;
+        if (command.next_layer_rules_num > 0) {
+            create_next_layer_rules_num = command.next_layer_rules_num;
+            delete_next_layer_rules_num = command.next_layer_rules_num / 2;
+        }
+        multilayertuple.Init(1, true);
         PerformClassificationZcy(command, program_state, multilayertuple, rules, traces, ans, &Classifier::Lookup, &Classifier::LookupAccess);
     } else {
         printf("No such method %s\n", command.method_name.c_str());
     }
+    return 0;
 }

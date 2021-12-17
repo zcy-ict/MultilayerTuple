@@ -207,6 +207,7 @@ void TupleSpaceSearch::InsertRule(const PSRule& rule) {
 int TupleSpaceSearch::CalculateState(ProgramState *program_state) {
 	program_state->tuples_num = all_tuples.size();
 	program_state->tuples_sum = all_tuples.size();
+	return 0;
 }
 
 int TupleSpaceSearch::WorstAccesses() const {
@@ -330,10 +331,10 @@ void PriorityTupleSpaceSearch::InsertRule(const PSRule& rule) {
 }
 
 
-
 int PriorityTupleSpaceSearch::CalculateState(ProgramState *program_state) {
 	program_state->tuples_num = priority_tuples_vector.size();
 	program_state->tuples_sum = priority_tuples_vector.size();
+	return 0;
 }
 
 

@@ -25,13 +25,13 @@ public:
     int Free(bool free_self);
     int Test(void *ptr);
 
-    int Init(uint32_t _tuple_layer, bool _start_tuple_layer, uint32_t _prefix_dims_num);
+    int Init(uint32_t _tuple_layer, bool _start_tuple_layer);
     void InsertTuple(MTuple *tuple);
     void SortTuples();
+    uint32_t GetReducedPrefix(uint32_t *prefix_len, Rule *rule);
 
     bool start_tuple_layer;
     uint32_t tuple_layer;
-    uint32_t prefix_dims_num;
 
     MTuple **tuples_arr;
     map<uint32_t, MTuple*> tuples_map;

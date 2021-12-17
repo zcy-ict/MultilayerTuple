@@ -27,7 +27,7 @@
 
 /* comment out the line below to remove all the debugging assertion */
 /* checks from the compiled code.  */
-#define DEBUG_ASSERT 0
+// #define DEBUG_ASSERT 0
 
 static const int LOW = 0, HIGH = 1;
 struct rb_red_blk_tree;

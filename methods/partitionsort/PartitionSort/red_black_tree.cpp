@@ -433,7 +433,7 @@ rb_red_blk_node * RBTreeInsertWithPathCompression(rb_red_blk_tree* tree, const s
 		  } else if (!(temp_chain_boxes[run][0] == key[fieldOrder[level + run]][0] && temp_chain_boxes[run][1] == key[fieldOrder[level + run]][1])) {
 			  if (IsIntersect(temp_chain_boxes[run][0], temp_chain_boxes[run][1], key[fieldOrder[level + run]][0], key[fieldOrder[level + run]][1])) {
 				  printf("Warning not intersect?\n");
-				  printf("[%lu %lu] vs. [%lu %lu]\n", temp_chain_boxes[run][LowDim], temp_chain_boxes[run][HighDim], key[fieldOrder[level + run]][LowDim], key[fieldOrder[level + run]][HighDim]);
+				  // printf("[%lu %lu] vs. [%lu %lu]\n", temp_chain_boxes[run][LowDim], temp_chain_boxes[run][HighDim], key[fieldOrder[level + run]][LowDim], key[fieldOrder[level + run]][HighDim]);
 				  printf("chain_boxes:\n");
 				  for (auto e : temp_chain_boxes)
 					  printf("[%u %u] ", e[LowDim], e[HighDim]);

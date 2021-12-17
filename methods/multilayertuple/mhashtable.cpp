@@ -2,9 +2,10 @@
 
 using namespace std;
 
-int MHashTable::Init(int size, uint32_t _tuple_layer, uint32_t _prefix_dims_num) {
+extern int prefix_dims_num;
+
+int MHashTable::Init(int size, uint32_t _tuple_layer) {
 	tuple_layer = _tuple_layer;
-	prefix_dims_num = _prefix_dims_num;
 
     hash_node_num = 0;
     max_hash_node_num = size * MHASHTABLEMAX;
@@ -42,12 +43,12 @@ int MHashTable::InsertHashNode(MHashNode *hash_node) {
 	return 1;
 }
 
-MHashNode* MHashTable::PickHashNode(uint32_t prefix_dims_num, uint32_t *keys, uint32_t hash) {
+MHashNode* MHashTable::PickHashNode(uint32_t *keys, uint32_t hash) {
     uint32_t index = hash & mask;
     MHashNode *hash_node = hash_node_arr[index];
     MHashNode *pre_hash_node = NULL;
     while (hash_node) {
-        if (hash_node->SameKey(prefix_dims_num, keys)) {
+        if (hash_node->SameKey(keys)) {
             if (pre_hash_node == NULL)
 				hash_node_arr[index] = hash_node->next;
 			else
@@ -90,11 +91,11 @@ int MHashTable::HashTableResize(uint32_t size) {
 }
 
 int MHashTable::InsertRule(Rule *rule, uint32_t *keys, uint32_t hash) {
-	MHashNode *hash_node = PickHashNode(prefix_dims_num, keys, hash);
+	MHashNode *hash_node = PickHashNode(keys, hash);
     if (!hash_node)
-        hash_node = new MHashNode(prefix_dims_num, keys, hash);
+        hash_node = new MHashNode(keys, hash);
     // printf("hash_node %016lx\n", (uint64_t)hash_node);
-    hash_node->InsertRule(rule, tuple_layer, prefix_dims_num);
+    hash_node->InsertRule(rule, tuple_layer);
     InsertHashNode(hash_node);
     if (rule->priority > max_priority)
         max_priority = rule->priority;
@@ -102,12 +103,12 @@ int MHashTable::InsertRule(Rule *rule, uint32_t *keys, uint32_t hash) {
 }
 
 int MHashTable::DeleteRule(Rule *rule, uint32_t *keys, uint32_t hash) {
-    MHashNode *hash_node = PickHashNode(prefix_dims_num, keys, hash);
+    MHashNode *hash_node = PickHashNode(keys, hash);
     if (!hash_node) {
         printf("Wrong: No such hash_node\n");
         return 1;
     }
-    if (hash_node->DeleteRule(rule, tuple_layer, prefix_dims_num) > 0) {
+    if (hash_node->DeleteRule(rule, tuple_layer) > 0) {
         printf("Wrong: HashNode DeleteRule\n");
         return 1;
     }

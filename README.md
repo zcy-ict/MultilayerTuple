@@ -30,7 +30,7 @@ g++ 5.4.0
 
 **--print_mode :**              the print mode, "0" means print with instructions, "1" means print without instructions
 
-**--prefix_dim_num :**          use the combination of "k" prefix lengths to generate tuples
+**--prefix_dims_num :**         use the combination of "k" prefix lengths to generate tuples
 
 **--next_layer_rules_num :**    the lengths of rule chain when MultilayerTuple builds the next layer, default is "20"
 
@@ -50,4 +50,4 @@ g++ 5.4.0
 ## Sample
 sh run.sh
 
-make && ./main --run_mode classification --method_name MultilayerTuple --rules_file data/10K_acl1_rules --traces_file data/10K_acl1_traces --rules_shuffle 1 --lookup_round 10 --force_test 0 --print_mode 0 --prefix_dim_num 5
+make && ./main --run_mode classification --method_name MultilayerTuple --rules_file data/10K_acl1_rules --traces_file data/10K_acl1_traces --rules_shuffle 1 --lookup_round 10 --force_test 0 --print_mode 0 --prefix_dims_num 5

@@ -33,7 +33,7 @@ CommandStruct ParseCommandLine(int argc, char *argv[]) {
        {"lookup_round", required_argument, NULL, 0},
        {"force_test", required_argument, NULL, 0},
        {"print_mode", required_argument, NULL, 0},
-       {"prefix_dim_num", required_argument, NULL, 0},
+       {"prefix_dims_num", required_argument, NULL, 0},
        {"lookup_thread_time", required_argument, NULL, 0},
        {"update_thread_speed", required_argument, NULL, 0},
        {"reconstruct_thread_time", required_argument, NULL, 0},
@@ -71,8 +71,8 @@ CommandStruct ParseCommandLine(int argc, char *argv[]) {
             	command.force_test = strtoul(optarg, NULL, 0);
 			} else if (strcmp(long_opts[option_index].name, "print_mode") == 0) {
             	command.print_mode = strtoul(optarg, NULL, 0);
-			} else if (strcmp(long_opts[option_index].name, "prefix_dim_num") == 0) {
-            	command.prefix_dim_num = strtoul(optarg, NULL, 0);
+			} else if (strcmp(long_opts[option_index].name, "prefix_dims_num") == 0) {
+            	command.prefix_dims_num = strtoul(optarg, NULL, 0);
 			} else if (strcmp(long_opts[option_index].name, "lookup_thread_time") == 0) {
             	command.lookup_thread_time = strtoul(optarg, NULL, 0);
 			} else if (strcmp(long_opts[option_index].name, "update_thread_speed") == 0) {
@@ -92,8 +92,8 @@ CommandStruct ParseCommandLine(int argc, char *argv[]) {
 	}
 	if (!flag)
 		exit(1);
-	if (command.prefix_dim_num != 2 && command.prefix_dim_num != 5) {
-		printf("prefix_dim_num should be 2 or 5\n");
+	if (command.prefix_dims_num != 2 && command.prefix_dims_num != 5) {
+		printf("prefix_dims_num should be 2 or 5\n");
 		exit(1);
 	}
     return command;

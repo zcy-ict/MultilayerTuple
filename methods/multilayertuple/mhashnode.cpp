@@ -2,8 +2,12 @@
 
 using namespace std;
 
-uint32_t next_layer_rules_num = 20;
-MHashNode::MHashNode(uint32_t prefix_dims_num, uint32_t *_keys, uint32_t _hash) {
+extern int max_layers_num;
+extern int prefix_dims_num;
+extern uint32_t create_next_layer_rules_num;
+extern uint32_t delete_next_layer_rules_num;
+
+MHashNode::MHashNode(uint32_t *_keys, uint32_t _hash) {
 	for (int i = 0; i < prefix_dims_num; ++i)
 		keys[i] = _keys[i];
     hash = _hash;
@@ -16,14 +20,14 @@ MHashNode::MHashNode(uint32_t prefix_dims_num, uint32_t *_keys, uint32_t _hash) 
     next_multilayertuple = NULL;
 }
 
-bool MHashNode::SameKey(uint32_t prefix_dims_num, uint32_t *_keys) {
+bool MHashNode::SameKey(uint32_t *_keys) {
 	for (int i = 0; i < prefix_dims_num; ++i)
 		if (keys[i] != _keys[i])
 			return false;
 	return true;
 }
 
-int MHashNode::InsertRule(Rule *rule, uint32_t tuple_layer, uint32_t prefix_dims_num) {
+int MHashNode::InsertRule(Rule *rule, uint32_t tuple_layer) {
 
     if (has_next_multilayertuple) {
         if (next_multilayertuple->InsertRule(rule) > 0) {
@@ -58,7 +62,7 @@ int MHashNode::InsertRule(Rule *rule, uint32_t tuple_layer, uint32_t prefix_dims
     if (rule->priority > max_priority)
     	max_priority = rule->priority;
 
-    if (rules_num >= next_layer_rules_num && !has_next_multilayertuple && tuple_layer < 5) {
+    if (rules_num >= create_next_layer_rules_num && !has_next_multilayertuple && tuple_layer < max_layers_num) {
         // printf("Create next_multilayertuple\n");
         vector<Rule*> rules;
         GetRules(rules);
@@ -67,16 +71,16 @@ int MHashNode::InsertRule(Rule *rule, uint32_t tuple_layer, uint32_t prefix_dims
 
         has_next_multilayertuple = true;
         next_multilayertuple = new MultilayerTuple();
-        next_multilayertuple->Init(tuple_layer + 1, false, prefix_dims_num);
+        next_multilayertuple->Init(tuple_layer + 1, false);
         next_multilayertuple->Create(rules, false);
         for (int i = 0; i < get_rules_num; ++i)
-            InsertRule(rules[i], tuple_layer, prefix_dims_num);
+            InsertRule(rules[i], tuple_layer);
     }
 
 	return 0;
 }
 
-int MHashNode::DeleteRule(Rule *rule, uint32_t tuple_layer, uint32_t prefix_dims_num) {
+int MHashNode::DeleteRule(Rule *rule, uint32_t tuple_layer) {
     bool delete_success = false;
     if (has_next_multilayertuple) {
         if (next_multilayertuple->DeleteRule(rule) > 0) {
@@ -113,7 +117,7 @@ int MHashNode::DeleteRule(Rule *rule, uint32_t tuple_layer, uint32_t prefix_dims
         }
     }
     
-    if (has_next_multilayertuple && rules_num <= next_layer_rules_num / 2) {
+    if (has_next_multilayertuple && rules_num <= delete_next_layer_rules_num) {
         // printf("delete next_multilayertuple\n");
         vector<Rule*> rules;
         GetRules(rules);
@@ -121,7 +125,7 @@ int MHashNode::DeleteRule(Rule *rule, uint32_t tuple_layer, uint32_t prefix_dims
         Free(false);
 
         for (int i = 0; i < get_rules_num; ++i)
-            InsertRule(rules[i], tuple_layer, prefix_dims_num);
+            InsertRule(rules[i], tuple_layer);
         // printf("rules_num %d\n", rules_num);
     }
 

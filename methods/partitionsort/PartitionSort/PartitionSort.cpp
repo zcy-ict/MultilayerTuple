@@ -70,4 +70,5 @@ void PartitionSort::DeleteRule(const PSRule& one_rule){
 int PartitionSort::CalculateState(ProgramState *program_state) {
 	program_state->tuples_num = mitrees.size();
 	program_state->tuples_sum = mitrees.size();
+	return 0;
 }

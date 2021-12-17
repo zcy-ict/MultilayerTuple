@@ -393,6 +393,7 @@ int FreeRules(vector<Rule*> &rules) {
     for (int i = 0; i < rules_num; ++i)
         free(rules[i]);
     rules.clear();
+    return 0;
 }
 
 vector<Trace*> ReadTraces(string traces_file) {
@@ -436,6 +437,7 @@ int FreeTraces(vector<Trace*> &traces) {
     for (int i = 0; i < traces_num; ++i)
         free(traces[i]);
     traces.clear();
+    return 0;
 }
 
 bool SameTrace(Trace *trace1, Trace *trace2) {
@@ -444,13 +446,6 @@ bool SameTrace(Trace *trace1, Trace *trace2) {
 			return false;
 	return true;
 }
-
-// bool MatchRuleTrace(Rule *rule, Trace *trace) {
-// 	for (int i = 0; i < 5; i++)
-// 		if (trace->key[i] < rule->range[i][0] || trace->key[i] > rule->range[i][1])
-// 			return false;
-// 	return true;
-// }
 
 vector<int> GenerateAns(vector<Rule*> &rules, vector<Trace*> &traces, int force_test) {
     vector<int> ans;

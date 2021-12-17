@@ -14,7 +14,6 @@ struct MHashNode;
 
 struct MHashTable {
     uint32_t tuple_layer;
-    uint32_t prefix_dims_num;
 
     uint32_t hash_node_num;
     uint32_t max_hash_node_num;
@@ -23,9 +22,9 @@ struct MHashTable {
     MHashNode **hash_node_arr;
     int max_priority;
 
-    int Init(int size, uint32_t _tuple_layer, uint32_t _prefix_dims_num);
+    int Init(int size, uint32_t _tuple_layer);
     int InsertHashNode(MHashNode *hash_node);
-    MHashNode* PickHashNode(uint32_t prefix_dims_num, uint32_t *keys, uint32_t hash);
+    MHashNode* PickHashNode(uint32_t *keys, uint32_t hash);
     int HashTableResize(uint32_t size);
 
     int InsertRule(Rule *rule, uint32_t *keys, uint32_t hash);
@@ -38,7 +37,6 @@ struct MHashTable {
 };
 
 struct MTuple {
-    uint32_t prefix_dims_num;
     uint32_t tuple_layer;
     uint32_t prefix_len[5];
     uint32_t prefix_len_zero[5];
@@ -48,7 +46,7 @@ struct MTuple {
 
     MHashTable hash_table;
 
-    MTuple(uint32_t _tuple_layer, uint32_t _prefix_dims_num, uint32_t *_prefix_len);
+    MTuple(uint32_t _tuple_layer, uint32_t *_prefix_len);
     int InsertRule(Rule *rule);
     int DeleteRule(Rule *rule);
     uint64_t MemorySize();

@@ -251,7 +251,7 @@ namespace TupleMergeUtils {
 }
 
 inline TMTuple AddressOfRule(const PSRule& r) {
-	return {r.prefix_length[0], r.prefix_length[1]};
+	return {(int)r.prefix_length[0], (int)r.prefix_length[1]};
 }
 
 inline uint32_t HashAddress(const TMTuple& t) {
