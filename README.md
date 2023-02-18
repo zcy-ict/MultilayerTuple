@@ -7,6 +7,8 @@ If there are any problems or bugs, welcome to discuss with me
 
 zhangchunyang@ict.ac.cn
 
+zhangchunyangict@outlook.com
+
 ## Experimental environment
 
 Ubuntu 16.04
